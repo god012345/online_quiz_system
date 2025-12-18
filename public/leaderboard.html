@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaderboard - Quiz Assessment Platform</title>
+  <link rel="stylesheet" href="style.css?v=4.0">
+  <link rel="stylesheet" href="mobile.css?v=4.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="leaderboard-container">
+  <h1><i class="fas fa-trophy"></i> Leaderboard</h1>
+  
+  <div class="tabs-nav">
+    <button class="tab-btn active" onclick="switchTab('leaderboard')">
+      <i class="fas fa-list-ol"></i> Rankings
+    </button>
+    <button class="tab-btn" onclick="switchTab('questions')">
+      <i class="fas fa-book-open"></i> Question Bank
+    </button>
+  </div>
+
+  <!-- Leaderboard Tab -->
+  <div id="leaderboard" class="tab-section active">
+    <div style="text-align: right; margin-bottom: 20px;">
+        <span class="flashing-text" style="color: black; margin-right: 10px;">● LIVE</span>
+    </div>
+    <div id="list">
+       <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Questions Tab -->
+  <div id="questions" class="tab-section">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2><i class="fas fa-database"></i> Question Bank</h2>
+    </div>
+    <div id="questionsList"></div>
+  </div>
+
+  <div style="text-align: center; margin-top: 40px;">
+    <a href="/" class="btn btn-outline" style="display:inline-flex; align-items:center; text-decoration:none;">
+      <i class="fas fa-home"></i> Return to Home
+    </a>
+  </div>
+  <div style="margin-top: 30px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 0.8rem; color: var(--text-muted);">
+      <p style="color: var(--primary-blue); font-weight: 600; letter-spacing: 0.5px;">Developed by Detroit Team</p>
+      <div style="margin-top: 5px; font-size: 0.75rem;">
+          Mr. Karthikeyan.J (B.Sc.Cs.AI) | Mr. Gopinath.G (B.Sc.Cs) | Ms. Ishwarya (B.Sc.Cs.D.S.A) | Ms. Dharani (B.Sc.Cs.D.S.A)
+      </div>
+  </div>
+</div>
+
+<script>
+function switchTab(tabName) {
+  // Hide all tabs
+  document.querySelectorAll('.tab-section').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  
+  // Show selected tab
+  document.getElementById(tabName).classList.add('active');
+  // Find the button that called this function - slightly hacky if not passed, 
+  // but we can search by onclick content or just iterate to find match
+  // Better to use event.currentTarget if possible, or just re-select
+  const btns = document.querySelectorAll('.tab-btn');
+  btns.forEach(btn => {
+      if(btn.onclick.toString().includes(tabName)) btn.classList.add('active');
+  });
+  
+  // Load data if needed
+  if (tabName === 'leaderboard') {
+    loadLeaderboard();
+  } else if (tabName === 'questions') {
+    loadQuestionsForLeaderboard();
+  }
+}
+
+function loadLeaderboard() {
+  console.log('Loading leaderboard...');
+  const list = document.getElementById('list');
+  if (!list) {
+    console.error('List element not found!');
+    return;
+  }
+  list.innerHTML = '<div class="spinner"></div>';
+
+  fetch('/api/quiz/public-leaderboard')
+  .then(r => {
+    console.log('Response status:', r.status);
+    return r.json();
+  })
+  .then(data => {
+    console.log('Leaderboard data received:', data);
+    if (!data.leaderboard || data.leaderboard.length === 0) {
+      list.innerHTML = '<div class="empty-state">No quiz submissions yet. Be the first to take the assessment!</div>';
+      return;
+    }
+    
+    const rows = data.leaderboard.map((entry, index) => {
+      const accuracy = entry.totalQuestions > 0 ? (entry.correctAnswers/entry.totalQuestions)*100 : 0;
+      const minutes = Math.floor(entry.timeTaken / 60);
+      const seconds = entry.timeTaken % 60;
+      
+      return `
+        <tr style="animation: slideUp 0.3s ease backwards; animation-delay: ${index * 0.05}s">
+          <td><div class="rank-badge">${entry.rank}</div></td>
+          <td><span style="font-weight: bold; color: var(--text-primary);">${entry.name}</span></td>
+          <td style="font-family: monospace; color: var(--primary-blue);">${entry.registerNo}</td>
+          <td><strong style="font-size: 1.2rem; color: var(--primary-blue);">${entry.score}</strong></td>
+          <td>
+            <div style="width: 100px; height: 6px; background: var(--bg-tertiary); border-radius: 3px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 5px;">
+                <div style="width: ${accuracy}%; height: 100%; background: var(--success-green);"></div>
+            </div>
+            ${entry.correctAnswers}/${entry.totalQuestions}
+          </td>
+          <td>${minutes}m ${seconds}s</td>
+        </tr>
+      `;
+    }).join('');
+    
+    list.innerHTML = `
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>ID</th>
+            <th>Score</th>
+            <th>Accuracy</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+        </tbody>
+      </table>
+    `;
+    console.log('Leaderboard table rendered successfully');
+  })
+  .catch(err => {
+    list.innerHTML = '<div class="empty-state" style="color: var(--danger-red)">Error loading leaderboard data.</div>';
+    console.error(err);
+  });
+}
+
+function loadQuestionsForLeaderboard() {
+  const container = document.getElementById('questionsList');
+  container.innerHTML = '<div class="spinner"></div>';
+  
+  fetch('/api/quiz/archive')
+  .then(r => r.json())
+  .then(data => {
+    if (!data.questions || data.questions.length === 0) {
+      container.innerHTML = '<div class="empty-state">No questions available in the archives.</div>';
+      return;
+    }
+    
+    const questionCards = data.questions.map((q, idx) => {
+      const optionsHtml = (q.options || []).map(opt => {
+        const isCorrect = opt.isCorrect;
+        const borderColor = isCorrect ? 'var(--success-green)' : 'var(--border-color)';
+        const icon = isCorrect ? '<i class="fas fa-check" style="color: var(--success-green)"></i>' : '<i class="far fa-circle"></i>';
+        
+        return `
+          <div class="option-label ${isCorrect ? 'selected' : ''}" style="cursor: default; border-color: ${borderColor};">
+            ${icon} ${opt.text || ''}
+          </div>
+        `;
+      }).join('');
+      
+      return `
+        <div class="question-card" style="animation: slideUp 0.3s ease backwards; animation-delay: ${idx * 0.05}s">
+          <div class="question-title"><span style="color: var(--primary-blue)">${idx + 1}.</span> ${q.question || 'Untitled'}</div>
+          <div style="margin-bottom: 10px;">
+            <span style="border: 1px solid var(--primary-blue); color: var(--primary-blue); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">
+              ${q.type === 'single' ? 'Single Choice' : 'Multiple Choice'}
+            </span>
+            <span style="border: 1px solid var(--warning-orange); color: var(--warning-orange); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; margin-left: 10px;">
+              ${q.marks || 1} Points
+            </span>
+          </div>
+          <div>
+            ${optionsHtml}
+          </div>
+        </div>
+      `;
+    }).join('');
+    
+    container.innerHTML = questionCards;
+  })
+  .catch(err => {
+    container.innerHTML = `
+        <div class="empty-state">
+            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px; color: var(--danger-red);"></i><br>
+            Error loading question bank. Please try again.
+        </div>`;
+    console.error(err);
+  });
+}
+
+// Load leaderboard on page load
+window.addEventListener('load', loadLeaderboard);
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quiz Assessment | Take Test</title>
+  <link rel="stylesheet" href="style.css?v=4.0">
+  <link rel="stylesheet" href="mobile.css?v=4.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div id="timer">⏱️ 10:00</div>
+
+<div class="quiz-wrapper">
+  <div id="quizContainer" class="card">
+    <div class="quiz-info">
+      <span><i class="fas fa-lightbulb" style="color: var(--warning-orange)"></i> Read all options carefully</span>
+      <span><i class="fas fa-clock" style="color: var(--danger-red)"></i> Time is running</span>
+    </div>
+    <div id="questionContainer"></div>
+  </div>
+</div>
+
+<div id="resultsContainer" style="display:none;" class="card results-container">
+  <h1><i class="fas fa-check-circle" style="color: var(--success-green)"></i> Quiz Completed!</h1>
+  
+  <div class="score-box" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); padding: 40px; border-radius: 20px; border: 2px solid var(--primary-blue); margin: 30px 0;">
+    <div class="score-label" style="color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; font-size: 0.875rem;">Your Score</div>
+    <div class="score-value" id="finalScore" style="font-size: 5rem; font-weight: 900; background: var(--primary-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">0</div>
+  </div>
+  
+  <div class="stats-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+    <div class="stat-card">
+      <i class="fas fa-check" style="font-size: 2rem; color: var(--success-green); margin-bottom: 10px;"></i>
+      <div class="stat-value" id="correctCount">0</div>
+      <div class="stat-label">Correct</div>
+    </div>
+    <div class="stat-card">
+      <i class="fas fa-list" style="font-size: 2rem; color: var(--primary-blue); margin-bottom: 10px;"></i>
+      <div class="stat-value" id="totalCount">0</div>
+      <div class="stat-label">Total</div>
+    </div>
+    <div class="stat-card">
+      <i class="fas fa-percentage" style="font-size: 2rem; color: var(--primary-blue); margin-bottom: 10px;"></i>
+      <div class="stat-value" id="percentage">0%</div>
+      <div class="stat-label">Accuracy</div>
+    </div>
+  </div>
+  
+  <div id="resultMessage" style="margin: 30px 0; font-size: 1.5rem; text-align: center; color: var(--text-primary);"></div>
+  
+  <div id="reviewContainer" style="margin-top: 30px; text-align: left;"></div>
+
+  <div style="margin-top: 40px;">
+      <button class="btn btn-primary" id="leaderboardBtn" style="width: 100%; font-size: 1.2rem;">
+        <i class="fas fa-trophy"></i> View Leaderboard
+      </button>
+  </div>
+
+  <div style="margin-top: 30px; text-align: center; border-top: 2px solid var(--border-color); padding-top: 20px; font-size: 0.8rem; color: var(--text-muted);">
+      <p style="color: var(--primary-blue); font-weight: 600; letter-spacing: 1px;">Developed by Team Detroit</p>
+      <div style="margin-top: 5px; font-size: 0.75rem;">
+          Mr. Karthikeyan J (B.Sc.Cs.AI) | Mr. Gopinath G (B.Sc.Cs) | Ms. Ishwarya (B.Sc.Cs.D.S.A) | Ms. Dharani (B.Sc.Cs.D.S.A)
+      </div>
+  </div>
+</div>
+
+
+<script src="quiz.js"></script>
+</body>
+</html>
