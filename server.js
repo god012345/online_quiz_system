@@ -51,7 +51,6 @@ app.use(express.static('public'));
 const userRoutes = require('./routes/userRoutes');
 const quizRoutes = require('./routes/quizRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-
 /* =========================
    API ROUTES
 ========================= */
@@ -83,21 +82,21 @@ app.post('/api/test-post', (req, res) => {
 /* =========================
    PAGE ROUTES
 ========================= */
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
-});
+// app.get('/', (req, res) => {
+//   res.sendFile(__dirname + '/public/index.html');
+// });
 
-app.get('/quiz', (req, res) => {
-  res.sendFile(__dirname + '/public/quiz.html');
-});
+// app.get('/quiz', (req, res) => {
+//   res.sendFile(__dirname + '/public/quiz.html');
+// });
 
-app.get('/leaderboard', (req, res) => {
-  res.sendFile(__dirname + '/public/leaderboard.html');
-});
+// app.get('/leaderboard', (req, res) => {
+//   res.sendFile(__dirname + '/public/leaderboard.html');
+// });
 
-app.get('/admin', (req, res) => {
-  res.sendFile(__dirname + '/public/admin.html');
-});
+// app.get('/admin', (req, res) => {
+//   res.sendFile(__dirname + '/public/admin.html');
+// });
 
 /* =========================
    404 HANDLER (MUST BE LAST)
