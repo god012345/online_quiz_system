@@ -12,7 +12,7 @@ This index helps you navigate all available resources. Start with what matches y
 **Just want to take a quiz?**
 1. Go to the home page
 2. Fill in your name, register number, and email
-3. Click "Start Quiz"
+3. Click gg"Start Quiz"
 4. Answer questions within the time limit
 5. View your results and ranking
 
