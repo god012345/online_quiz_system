@@ -8,10 +8,12 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/index.js" },
+
     { "src": "/", "dest": "/public/index.html" },
     { "src": "/admin", "dest": "/public/admin.html" },
     { "src": "/quiz", "dest": "/public/quiz.html" },
     { "src": "/leaderboard", "dest": "/public/leaderboard.html" },
+
     { "src": "/(.*)", "dest": "/public/$1" }
   ]
 }
