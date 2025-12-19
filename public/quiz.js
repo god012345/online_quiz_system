@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         
         quizData = data;
-        timeLeft = data.timer;
+        timeLeft = 1200;
         
         // Clear message
         const msg = document.querySelector('.alert');
