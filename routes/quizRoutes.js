@@ -108,7 +108,7 @@ router.get("/questions/:userId", async (req, res) => {
     }
 
     const settings = settingsDoc.data();
-    const count = settings.questionsPerUser || 10;
+    const count = settings.questionsPerUser || 20;
     const selected = all.slice(0, count);
 
     const totalPossibleMarks = selected.reduce(
@@ -135,7 +135,7 @@ router.get("/questions/:userId", async (req, res) => {
 
     res.json({
       questions: questionsForUser,
-      timer: settings.quizDuration || 600,
+      timer: settings.quizDuration || 1200,
       totalMarks: totalPossibleMarks
     });
   } catch (err) {
