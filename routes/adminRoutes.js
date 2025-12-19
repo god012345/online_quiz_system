@@ -97,8 +97,8 @@ router.post('/settings', async (req, res) => {
     
     await settingsRef.set({
       isActive: isActive !== undefined ? isActive : true,
-      quizDuration: quizDuration || 600,
-      questionsPerUser: questionsPerUser || 10,
+      quizDuration: quizDuration || 1200,
+      questionsPerUser: questionsPerUser || 20,
       title: title || 'GOD-LEVEL Quiz',
       description: description || 'Test your knowledge!',
       updatedAt: new Date()

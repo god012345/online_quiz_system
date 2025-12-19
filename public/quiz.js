@@ -1,6 +1,6 @@
 // Quiz page functionality
 let quizTimer;
-let timeLeft = 600; // Default 10 minutes
+let timeLeft = 1200; // Default 10 minutes
 let currentQuestion = 0;
 let userAnswers = [];
 let quizData = null;
